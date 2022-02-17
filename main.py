@@ -5,11 +5,13 @@ import pandas as pd
 from glob import glob
 from tqdm import tqdm
 
-# Specify input folder!
+# Specify input_path and file_name!
+# NOTE: r is used for literal paths on Windows (backslash compatibility)
 input_path = "D:/Programming/PDF2XLSX/Input"
+file_name = "Output/Test.xlsx"
 
 
-if __name__ == '__main__':
+def pdf2xlsx():
     # Create output folder
     output_path = input_path.replace("Input", "Output")
     os.makedirs(output_path, exist_ok=True)
@@ -17,22 +19,32 @@ if __name__ == '__main__':
     # Get all PDFs in input path
     files = glob(f"{input_path}/*.pdf")
 
-    # Iterate over PDFs, extract tables, load into dataframe and save to XLSX
-    print("Extracting tables from PDFs and saving them to XLSXs...")
-    for f in tqdm(files, file=sys.stdout):
-        # Set output file name
-        name = f.replace("Input", "Output").replace("pdf", "xlsx")
-
-        # If XLSX already exists, skip
-        if os.path.exists(name):
-            continue
-
+    # Iterate over PDFs, extract tables and load into dataframe
+    print("Extracting tables to dataframe...")
+    df = pd.DataFrame()
+    for i, f in enumerate(tqdm(files, file=sys.stdout)):
         # Extract table to dataframe
         with pdfplumber.open(f) as pdf:
             table = pdf.pages[0].extract_table()
-            df = pd.DataFrame(table[1::], columns=table[0])
+            temp = pd.DataFrame(table[1::], columns=table[0])
+            # Add relevant table to df
+            # If first PDF, add first and second column, else only second with file name as header
+            name = f.split("/")[-1].split("\\")[-1].replace(".pdf", "")
+            if i == 0:
+                df[""] = temp[""]
+                df[name] = temp["Your Score"].astype(float)
+            else:
+                df[name] = temp["Your Score"].astype(float)
 
-        # Save first two columns to XLSX
-        df.to_excel(name, index=False, columns=["", "Your Score"])
+    # Save dataframe to XLSX
+    print("Saving dataframe to XLSX...")
+    try:
+        df.to_excel(file_name, index=False)
+    except IOError as e:
+        return f"{file_name} is used by another process, please close it first!"
 
-    print("All done!")
+    return "All done!"
+
+
+if __name__ == '__main__':
+    print(pdf2xlsx())
