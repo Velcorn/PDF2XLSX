@@ -6,7 +6,7 @@ from glob import glob
 from tqdm import tqdm
 
 # Specify input_path and file_name!
-# NOTE: r is used for literal paths on Windows (backslash compatibility)
+# NOTE: r"{path}" - without curly brackets - is used for literal paths on Windows (backslash compatibility)
 input_path = "D:/Programming/PDF2XLSX/Input"
 file_name = "Output/Test.xlsx"
 
