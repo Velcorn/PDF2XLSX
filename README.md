@@ -5,7 +5,7 @@ otherwise, see [Link](https://pip.pypa.io/en/stable/installation/))
 
 # Initial Setup:
 - Run `pip install -r requirements.txt`
-- Modify `input_path` in `main.py` to set the path where your PDFs
+- Modify `input_path` in `main.py` to set the path where your PDFs are saved
 NOTE: root folder of input_path has to exist!
 
 # Extract table columns from PDF and save to XLSX
