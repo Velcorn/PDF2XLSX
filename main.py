@@ -12,10 +12,6 @@ file_name = "Output/Test.xlsx"
 
 
 def pdf2xlsx():
-    # Create output folder
-    output_path = input_path.replace("Input", "Output")
-    os.makedirs(output_path, exist_ok=True)
-
     # Get all PDFs in input path
     files = glob(f"{input_path}/*.pdf")
 
